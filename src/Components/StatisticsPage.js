@@ -228,10 +228,13 @@ const StatiscticsPage = (()=>{
             setSlashtag('')
             setDestination('')
             alert('Ссылка успешно добавлена')
+            getLinks()
+
         }).catch(function (error) {
             console.error(error);
             alert('Ошибка добавления. Измените параметры')
         });
+
     }
 
     return(
