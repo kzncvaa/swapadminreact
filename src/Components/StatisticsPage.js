@@ -177,15 +177,11 @@ const StatiscticsPage = (()=>{
                     clicks: a.clicks
                 })
             })
-            // for (const dataTableElement of dataTable) {
-            //     newDataTable.push({id: dataTableElement.id, site: dataTableElement.destination, link: dataTableElement.shortUrl, clicks: dataTableElement.clicks})
-            //     console.log({id: dataTableElement.id, site: dataTableElement.destination, link: dataTableElement.shortUrl, clicks: dataTableElement.clicks})
-            // }
             setData(newDataTable)
-
         })
         return newDataTable;
     }
+
     //
     // function getAll() {
     //     let dataTable = [];
@@ -268,6 +264,7 @@ const StatiscticsPage = (()=>{
                             <Grid   style={{margin: "1rem"}}>
                                 <h3>Все ссылки</h3>
                                 <ReactDataGrid
+                                    className={'rdg-light'}
                                     columns={columns}
                                     rows={data}
                                 />

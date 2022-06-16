@@ -163,6 +163,7 @@ const TablePage = (()=>{
             <Container maxWidth="lg" className={classes.container}>
                 <Grid container spacing={3}>
                     <ReactDataGrid
+                        className={'rdg-light'}
                         columns={columns}
                         rows={data}
                     />
