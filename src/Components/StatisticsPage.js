@@ -103,7 +103,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const StatiscticsPage = (()=>{
+const StatiscticsPage = (() => {
     const [destination, setDestination] = useState('');
     const [slashtag, setSlashtag] = useState('');
     let [data, setData] = useState([])
@@ -111,13 +111,13 @@ const StatiscticsPage = (()=>{
     const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     const columns = [
-        { key: "id", name: "ID", frozen: true},
-        { key: "site", name: "Сайт",  frozen: true },
-        { key: "link", name: "Короткая ссылка", editable: true },
-        { key: "clicks", name: "Количество кликов", filterable: true}
+        {key: "id", name: "ID", frozen: true},
+        {key: "site", name: "Сайт", frozen: true},
+        {key: "link", name: "Короткая ссылка", editable: true},
+        {key: "clicks", name: "Количество кликов", filterable: true}
     ];
 
-    useEffect( () => {
+    useEffect(() => {
         getLinks()
         // const getAll = async () => {
         //     let req = await axios.get('https://ruletka1234.herokuapp.com/getAllData')
@@ -134,7 +134,6 @@ const StatiscticsPage = (()=>{
         // }
         // getAll()
     }, [])
-
 
 
     function getCountOfList() {
@@ -155,7 +154,7 @@ const StatiscticsPage = (()=>{
         return count;
     }
 
-    function getLinks(){
+    let getLinks = async () => {
         const options = {
             method: 'GET',
             url: 'https://api.rebrandly.com/v1/links',
@@ -163,22 +162,62 @@ const StatiscticsPage = (()=>{
             headers: {Accept: 'application/json', apikey: '338ac7f8595e416f8eeb1f56d687389b'}
         };
 
-        let dataTable;
         let newDataTable = [];
-        axios.request(options).then(function (response) {
-            console.log(response.data);
-            dataTable = response.data;
-        }).then(()=>{
-            dataTable.forEach((a, i)=>{
+        try {
+            let response = await axios.request(options);
+
+            response.data.forEach((a, i) => {
                 newDataTable.push({
-                    id: i+1,
+                    id: i + 1,
                     site: a.destination,
                     link: a.shortUrl,
-                    clicks: a.clicks
+                    clicks: a.clicks,
+                    idItem: a.id
                 })
             })
-            setData(newDataTable)
-        })
+        } catch (e) {
+        }
+
+        try {
+            let currentId = newDataTable[newDataTable.length - 1].idItem
+            let currentIdNum = newDataTable[newDataTable.length - 1].id
+            while (true) {
+                const options = {
+                    method: 'GET',
+                    url: 'https://api.rebrandly.com/v1/links',
+                    params: {
+                        orderBy: 'createdAt',
+                        orderDir: 'desc',
+                        limit: '25',
+                        last: currentId
+                    },
+                    headers: {Accept: 'application/json', apikey: '338ac7f8595e416f8eeb1f56d687389b'}
+                };
+
+                let response = await axios.request(options)
+                if (response.data.length !== 0) {
+                    response.data.forEach((a, i) => {
+                        newDataTable.push({
+                            id: currentIdNum + i + 1,
+                            site: a.destination,
+                            link: a.shortUrl,
+                            clicks: a.clicks,
+                            idItem: a.id
+                        })
+                    })
+
+                    currentId = newDataTable[newDataTable.length - 1].idItem
+                    currentIdNum = newDataTable[newDataTable.length - 1].id
+
+                    if (response.data.length < 25)
+                        break
+                } else {
+                    break
+                }
+            }
+        } catch (e) { }
+
+        setData(newDataTable)
         return newDataTable;
     }
 
@@ -233,35 +272,38 @@ const StatiscticsPage = (()=>{
 
     }
 
-    return(
+    return (
         <main className={classes.content}>
-            <div className={classes.appBarSpacer} />
+            <div className={classes.appBarSpacer}/>
             <Container className={classes.container}>
                 <Grid container spacing={3}>
                     {/* Добавить новый */}
                     <Grid item xs={12}>
-                        <Paper style={{padding: '1rem'}} >
-                            <Grid   style={{margin: "1rem"}}>
+                        <Paper style={{padding: '1rem'}}>
+                            <Grid style={{margin: "1rem"}}>
                                 <h3>Добавить новую ссылку</h3>
                                 <Grid style={{margin: "1rem 0"}}>
-                                    <TextField id="outlined-basic" label="Ссылка" variant="outlined" style={{width: '100%'}}
+                                    <TextField id="outlined-basic" label="Ссылка" variant="outlined"
+                                               style={{width: '100%'}}
                                                value={destination} onInput={e => setDestination(e.target.value)}
                                     />
                                 </Grid>
                                 <Grid item style={{margin: "1rem 0"}}>
-                                    <TextField id="outlined-basic" label="Сокращение" variant="outlined"  style={{width: '100%'}}
+                                    <TextField id="outlined-basic" label="Сокращение" variant="outlined"
+                                               style={{width: '100%'}}
                                                value={slashtag} onInput={e => setSlashtag(e.target.value)}
                                     />
                                 </Grid>
                                 <Grid item style={{margin: "1rem 0"}}>
-                                    <Button variant="contained" onClick={()=>addNewLink(destination, slashtag)}>Добавить</Button>
+                                    <Button variant="contained"
+                                            onClick={() => addNewLink(destination, slashtag)}>Добавить</Button>
                                 </Grid>
                             </Grid>
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>
                         <Paper className={classes.paper}>
-                            <Grid   style={{margin: "1rem"}}>
+                            <Grid style={{margin: "1rem"}}>
                                 <h3>Все ссылки</h3>
                                 <ReactDataGrid
                                     className={'rdg-light'}
