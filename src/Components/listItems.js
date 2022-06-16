@@ -2,10 +2,9 @@ import React from "react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListSubheader from "@material-ui/core/ListSubheader";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import PeopleIcon from "@material-ui/icons/People";
+import BackupTableIcon from '@mui/icons-material/BackupTable';
+import LinkIcon from '@mui/icons-material/Link';
 import { Link } from "react-router-dom";
 
 
@@ -22,7 +21,7 @@ export const mainListItems = (
       <Link to="/table" style={{color: "black", textDecoration: 'none'}} >
           <ListItem button>
               <ListItemIcon>
-                  <ShoppingCartIcon />
+                  <BackupTableIcon />
               </ListItemIcon>
               <ListItemText primary="Таблица" />
           </ListItem>
@@ -30,9 +29,9 @@ export const mainListItems = (
       <Link to="/statistics" style={{color: "black", textDecoration: 'none'}} >
           <ListItem button>
               <ListItemIcon>
-                  <PeopleIcon />
+                  <LinkIcon />
               </ListItemIcon>
-              <ListItemText primary="Статистика" />
+              <ListItemText primary="Ссылки" />
           </ListItem>
       </Link>
   </div>

@@ -1,12 +1,14 @@
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Chart from "./Chart";
-import Deposits from "./Deposits";
-import Orders from "./Orders";
-import React from "react";
-import clsx from "clsx";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import React, {useState, useEffect} from "react";
 import {makeStyles} from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import Orders from "./Orders";
+import clsx from "clsx";
+import axios from "axios";
+import ReactDataGrid from "react-data-grid";
 
 
 const drawerWidth = 240;
@@ -101,17 +103,174 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-
 const StatiscticsPage = (()=>{
+    const [destination, setDestination] = useState('');
+    const [slashtag, setSlashtag] = useState('');
+    let [data, setData] = useState([])
+
     const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+    const columns = [
+        { key: "id", name: "ID", frozen: true},
+        { key: "site", name: "Сайт",  frozen: true },
+        { key: "link", name: "Короткая ссылка", editable: true },
+        { key: "clicks", name: "Количество кликов", filterable: true}
+    ];
+
+    useEffect( () => {
+        getLinks()
+        // const getAll = async () => {
+        //     let req = await axios.get('https://ruletka1234.herokuapp.com/getAllData')
+        //     if(req.data.length !== 0){
+        //         req.data.forEach((a, i) => {
+        //             a['id'] = i + 1;
+        //             a['smartCall'] = a['smartCall'] ? 'Да' : 'Нет';
+        //             a['smartApprove'] = a['smartApprove'] ? 'Да' : 'Нет'
+        //             a['chan'] = a['chan'] === 1 ? 'Eth' : 'Bsc'
+        //         })
+        //         console.log(req.data)
+        //         setData(req.data)
+        //     }
+        // }
+        // getAll()
+    }, [])
+
+
+
+    function getCountOfList() {
+        const options = {
+            method: 'GET',
+            url: 'https://api.rebrandly.com/v1/links/count',
+            headers: {Accept: 'application/json', apikey: '338ac7f8595e416f8eeb1f56d687389b'}
+        };
+
+        let count;
+        axios.request(options).then(function (response) {
+            console.log(response.data.count);
+            count = response.data.count
+        }).catch(function (error) {
+            console.error(error);
+            return error
+        });
+        return count;
+    }
+
+    function getLinks(){
+        const options = {
+            method: 'GET',
+            url: 'https://api.rebrandly.com/v1/links',
+            params: {orderBy: 'createdAt', orderDir: 'desc', limit: '25'},
+            headers: {Accept: 'application/json', apikey: '338ac7f8595e416f8eeb1f56d687389b'}
+        };
+
+        let dataTable;
+        let newDataTable = [];
+        axios.request(options).then(function (response) {
+            console.log(response.data);
+            dataTable = response.data;
+        }).then(()=>{
+            dataTable.forEach((a, i)=>{
+                newDataTable.push({
+                    id: i+1,
+                    site: a.destination,
+                    link: a.shortUrl,
+                    clicks: a.clicks
+                })
+            })
+            // for (const dataTableElement of dataTable) {
+            //     newDataTable.push({id: dataTableElement.id, site: dataTableElement.destination, link: dataTableElement.shortUrl, clicks: dataTableElement.clicks})
+            //     console.log({id: dataTableElement.id, site: dataTableElement.destination, link: dataTableElement.shortUrl, clicks: dataTableElement.clicks})
+            // }
+            setData(newDataTable)
+
+        })
+        return newDataTable;
+    }
+    //
+    // function getAll() {
+    //     let dataTable = [];
+    //     let last;
+    //     for (let i=0; i<=getCountOfList(); i+=25){
+    //         last ? dataTable.push(getLinks(last)) : dataTable.push(getLinks())
+    //         last =  dataTable[dataTable.length].id
+    //     }
+    //     return dataTable;
+    // }
+    //
+    // function getDataTable() {
+    //     let tableData = [];
+    //     getLinks().forEach((a,i)=>{
+    //         let newStr = {id: null, site: null, link: null, clicks: null}
+    //         newStr.id = a[i].id
+    //         newStr.site = a[i].id
+    //         newStr.link = a[i].id
+    //         newStr.clicks = a[i].id
+    //         tableData.push(newStr)
+    //     })
+    //     return tableData;
+    // }
+
+
+    function addNewLink(destination, slashtag) {
+        const options = {
+            method: 'POST',
+            url: 'https://api.rebrandly.com/v1/links',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                apikey: '338ac7f8595e416f8eeb1f56d687389b'
+            },
+            data: {destination: destination, slashtag: slashtag}
+        };
+
+        axios.request(options).then(function (response) {
+            console.log(response.data);
+            setSlashtag('')
+            setDestination('')
+            alert('Ссылка успешно добавлена')
+        }).catch(function (error) {
+            console.error(error);
+            alert('Ошибка добавления. Измените параметры')
+        });
+    }
 
     return(
         <main className={classes.content}>
             <div className={classes.appBarSpacer} />
-            <Container maxWidth="lg" className={classes.container}>
+            <Container className={classes.container}>
                 <Grid container spacing={3}>
-                    <h1>dfbdfgfd</h1>
+                    {/* Добавить новый */}
+                    <Grid item xs={12}>
+                        <Paper style={{padding: '1rem'}} >
+                            <Grid   style={{margin: "1rem"}}>
+                                <h3>Добавить новую ссылку</h3>
+                                <Grid style={{margin: "1rem 0"}}>
+                                    <TextField id="outlined-basic" label="Ссылка" variant="outlined" style={{width: '100%'}}
+                                               value={destination} onInput={e => setDestination(e.target.value)}
+                                    />
+                                </Grid>
+                                <Grid item style={{margin: "1rem 0"}}>
+                                    <TextField id="outlined-basic" label="Сокращение" variant="outlined"  style={{width: '100%'}}
+                                               value={slashtag} onInput={e => setSlashtag(e.target.value)}
+                                    />
+                                </Grid>
+                                <Grid item style={{margin: "1rem 0"}}>
+                                    <Button variant="contained" onClick={()=>addNewLink(destination, slashtag)}>Добавить</Button>
+                                </Grid>
+                            </Grid>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Paper className={classes.paper}>
+                            <Grid   style={{margin: "1rem"}}>
+                                <h3>Все ссылки</h3>
+                                <ReactDataGrid
+                                    columns={columns}
+                                    rows={data}
+                                />
+                            </Grid>
+                        </Paper>
+                    </Grid>
                 </Grid>
             </Container>
         </main>

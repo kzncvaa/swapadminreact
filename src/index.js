@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import ReactDOM from "react-dom";
 import Dashboard from "./Components/Dashboard";
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';

@@ -17,7 +17,6 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import ReactDOM from "react-dom/client";
 import MainPage from "./MainPage";
 import TablePage from "./TablePage";
 import StatisticsPage from "./StatisticsPage";
@@ -124,7 +123,6 @@ export default function Dashboard() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
       <BrowserRouter>
