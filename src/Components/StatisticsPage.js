@@ -170,7 +170,8 @@ const StatiscticsPage = (()=>{
         return count;
     }
 
-    function getLinks(){
+
+    let getLinks = async () => {
         const options = {
             method: 'GET',
             url: 'https://api.rebrandly.com/v1/links',
@@ -178,24 +179,65 @@ const StatiscticsPage = (()=>{
             headers: {Accept: 'application/json', apikey: '338ac7f8595e416f8eeb1f56d687389b'}
         };
 
-        let dataTable;
         let newDataTable = [];
-        axios.request(options).then(function (response) {
-            console.log(response.data);
-            dataTable = response.data;
-        }).then(()=>{
-            dataTable.forEach((a, i)=>{
+        try {
+            let response = await axios.request(options);
+
+            response.data.forEach((a, i) => {
                 newDataTable.push({
-                    id: i+1,
+                    id: i + 1,
                     site: a.destination,
                     link: a.shortUrl,
-                    clicks: a.clicks
+                    clicks: a.clicks,
+                    idItem: a.id
                 })
             })
-            setData(newDataTable)
-        })
+        } catch (e) {
+        }
+
+        try {
+            let currentId = newDataTable[newDataTable.length - 1].idItem
+            let currentIdNum = newDataTable[newDataTable.length - 1].id
+            while (true) {
+                const options = {
+                    method: 'GET',
+                    url: 'https://api.rebrandly.com/v1/links',
+                    params: {
+                        orderBy: 'createdAt',
+                        orderDir: 'desc',
+                        limit: '25',
+                        last: currentId
+                    },
+                    headers: {Accept: 'application/json', apikey: '338ac7f8595e416f8eeb1f56d687389b'}
+                };
+
+                let response = await axios.request(options)
+                if (response.data.length !== 0) {
+                    response.data.forEach((a, i) => {
+                        newDataTable.push({
+                            id: currentIdNum + i + 1,
+                            site: a.destination,
+                            link: a.shortUrl,
+                            clicks: a.clicks,
+                            idItem: a.id
+                        })
+                    })
+
+                    currentId = newDataTable[newDataTable.length - 1].idItem
+                    currentIdNum = newDataTable[newDataTable.length - 1].id
+
+                    if (response.data.length < 25)
+                        break
+                } else {
+                    break
+                }
+            }
+        } catch (e) { }
+
+        setData(newDataTable)
         return newDataTable;
     }
+
 
     //
     // function getAll() {
