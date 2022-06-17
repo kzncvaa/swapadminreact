@@ -162,9 +162,11 @@ const TablePage = (()=>{
     return(
         <main className={classes.content}>
             <div className={classes.appBarSpacer} />
-            <Container maxWidth="lg" className={classes.container}>
-                <Grid container spacing={3}>
+            <Container maxWidth="lg" className={classes.container} style={{width: '100%', height: '100%'}}>
+                <Grid container spacing={3} style={{width: '100%', height: '100%'}} >
                     <ReactDataGrid
+
+                        style={{width: '100%', height: '100%'}}
                         className={'rdg-light'}
                         columns={columns}
                         rows={data}
