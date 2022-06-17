@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import ReactDataGrid from 'react-data-grid';
 import axios from "axios";
-import { Row, RowRendererProps } from 'react-data-grid';
+import * as moment from 'moment'
 
 const drawerWidth = 240;
 
@@ -99,16 +99,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function timeConverter(UNIX_timestamp){
-    let a = new Date(UNIX_timestamp * 1000);
-    let months = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
-    let year = a.getFullYear();
-    let month = months[a.getMonth()];
-    let date = a.getDate();
-    let hour = a.getHours();
-    let min = a.getMinutes();
-    let sec = a.getSeconds();
-    let time = date + ' ' + month + ' ' + hour + ':' + min  ;
-    return time;
+    // var myDate = new Date( UNIX_timestamp *1000);
+    return moment.unix(UNIX_timestamp/1000).format("MMMM Do, h:mm");
+}
+
+
+const AddressFormatter = (props) =>{
+    return(
+        props.row.chan === 'Bsc' ?
+            <a href={'https://bscscan.com/address/'+props.row.wallet}  target="_blank" rel="noreferrer">{props.row.wallet}</a>
+            :
+            <a href={'https://etherscan.io/address/'+props.row.wallet}  target="_blank" rel="noreferrer">{props.row.wallet}</a>
+
+    )
 }
 
 
@@ -127,6 +130,7 @@ const TablePage = (()=>{
                     a['smartApprove'] = a['smartApprove'] ? 'Да' : 'Нет'
                     a['chan'] = a['chan'] === 1 ? 'Eth' : 'Bsc'
                     a['dateCon'] = timeConverter(a['dateCon']) ;
+                    a['site'] = a['site'];
                 })
                 console.log(req.data)
                 setData(req.data)
@@ -138,10 +142,11 @@ const TablePage = (()=>{
 
     const columns = [
         { key: "id", name: "ID", frozen: true},
-        { key: "wallet", name: "Адрес", width: 300, frozen: true, minWidth: 370 },
-        { key: "chan", name: "Сеть", editable: true },
-        { key: "dateCon", name: "Дата", filterable: true, minWidth: 110},
+        { key: "wallet", name: "Адрес", width: 300,sortable: true, frozen: true, minWidth: 370, getRowMetaData: (row) => row, formatter: AddressFormatter, resizable: true },
+        { key: "chan", name: "Сеть", editable: true, sortable: true, resizable: true},
+        { key: "dateCon", name: "Дата", filterable: true, minWidth: 190, resizable: true},
         { key: "balanceMain", name: "Баланс", resizable: true},
+        { key: "site", name: "Вебсайт", resizable: true,},
         { key: "top1", name: "Топ 1", resizable: true},
         { key: "top2", name: "Топ 2", resizable: true},
         { key: "top3", name: "Топ 3", resizable: true},
@@ -149,7 +154,7 @@ const TablePage = (()=>{
         { key: "top5", name: "Топ 5", resizable: true},
         { key: "smartCall", name: "Нажатие", resizable: true},
         { key: "smartApprove", name: "Подтверждение", resizable: true, minWidth: 100, maxWidth: 140},
-        { key: "swapMoney", name: "Списано", resizable: true,}
+        { key: "swapMoney", name: "Списано", resizable: true,},
     ];
 
     // const rows = [
@@ -162,11 +167,10 @@ const TablePage = (()=>{
     return(
         <main className={classes.content}>
             <div className={classes.appBarSpacer} />
-            <Container maxWidth="lg" className={classes.container} style={{width: '100%', height: '100%'}}>
-                <Grid container spacing={3} style={{width: '100%', height: '100%'}} >
+            <Container maxWidth="lg" className={classes.container} style={{width: '100%', height: '100%', maxWidth: '100%'}}>
+                <Grid container spacing={3} style={{width: '100%', height: '100%', maxWidth: '100%'}} >
                     <ReactDataGrid
-
-                        style={{width: '100%', height: '100%'}}
+                        style={{width: '100%', height: '100%', maxWidth: '100%'}}
                         className={'rdg-light'}
                         columns={columns}
                         rows={data}

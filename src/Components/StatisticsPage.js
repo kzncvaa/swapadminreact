@@ -119,35 +119,23 @@ const ColumnShortLinkFormatter = (props) =>{
 const StatiscticsPage = (()=>{
     const [destination, setDestination] = useState('');
     const [slashtag, setSlashtag] = useState('');
+    const [title, setTitle] = useState('');
     let [data, setData] = useState([])
 
     const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
     const columns = [
-        { key: "id", name: "ID", frozen: true},
-        { key: "site", name: "Сайт",  frozen: true, getRowMetaData: (row) => row, formatter: ColumnLinkFormatter},
-        { key: "link", name: "Короткая ссылка", editable: true, getRowMetaData: (row) => row, formatter: ColumnShortLinkFormatter },
-        { key: "clicks", name: "Количество кликов", filterable: true}
+        { key: "id", name: "ID", frozen: true, resizable: true},
+        { key: "title", name: "Название", filterable: true, resizable: true},
+        { key: "site", name: "Сайт",  frozen: true, getRowMetaData: (row) => row, formatter: ColumnLinkFormatter, resizable: true},
+        { key: "link", name: "Короткая ссылка", editable: true, resizable: true, getRowMetaData: (row) => row, formatter: ColumnShortLinkFormatter },
+        { key: "clicks", name: "Количество кликов", filterable: true, resizable: true}
     ];
 
 
     useEffect( () => {
         getLinks()
-        // const getAll = async () => {
-        //     let req = await axios.get('https://ruletka1234.herokuapp.com/getAllData')
-        //     if(req.data.length !== 0){
-        //         req.data.forEach((a, i) => {
-        //             a['id'] = i + 1;
-        //             a['smartCall'] = a['smartCall'] ? 'Да' : 'Нет';
-        //             a['smartApprove'] = a['smartApprove'] ? 'Да' : 'Нет'
-        //             a['chan'] = a['chan'] === 1 ? 'Eth' : 'Bsc'
-        //         })
-        //         console.log(req.data)
-        //         setData(req.data)
-        //     }
-        // }
-        // getAll()
     }, [])
 
 
@@ -189,7 +177,8 @@ const StatiscticsPage = (()=>{
                     site: a.destination,
                     link: a.shortUrl,
                     clicks: a.clicks,
-                    idItem: a.id
+                    title: a.title,
+                    idItem: a.id,
                 })
             })
         } catch (e) {
@@ -219,6 +208,7 @@ const StatiscticsPage = (()=>{
                             site: a.destination,
                             link: a.shortUrl,
                             clicks: a.clicks,
+                            title: a.title,
                             idItem: a.id
                         })
                     })
@@ -273,13 +263,14 @@ const StatiscticsPage = (()=>{
                 'Content-Type': 'application/json',
                 apikey: '338ac7f8595e416f8eeb1f56d687389b'
             },
-            data: {destination: destination, slashtag: slashtag}
+            data: {destination: destination, slashtag: slashtag, title: title}
         };
 
         axios.request(options).then(function (response) {
             console.log(response.data);
             setSlashtag('')
             setDestination('')
+            setTitle('')
             alert('Ссылка успешно добавлена')
             getLinks()
 
@@ -293,13 +284,18 @@ const StatiscticsPage = (()=>{
     return(
         <main className={classes.content}>
             <div className={classes.appBarSpacer} />
-            <Container className={classes.container}>
-                <Grid container spacing={3}>
+            <Container className={classes.container} style={{width: '100%', height: '100%', maxWidth: '100%'}}>
+                <Grid container spacing={3}  style={{width: '100%', height: '100%', maxWidth: '100%'}}>
                     {/* Добавить новый */}
                     <Grid item xs={12}>
                         <Paper style={{padding: '1rem'}} >
                             <Grid   style={{margin: "1rem"}}>
                                 <h3>Добавить новую ссылку</h3>
+                                <Grid style={{margin: "1rem 0"}}>
+                                    <TextField id="outlined-basic" label="Название" variant="outlined" style={{width: '100%'}}
+                                               value={title} onInput={e => setTitle(e.target.value)}
+                                    />
+                                </Grid>
                                 <Grid style={{margin: "1rem 0"}}>
                                     <TextField id="outlined-basic" label="Ссылка" variant="outlined" style={{width: '100%'}}
                                                value={destination} onInput={e => setDestination(e.target.value)}
@@ -316,11 +312,12 @@ const StatiscticsPage = (()=>{
                             </Grid>
                         </Paper>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Paper className={classes.paper}>
-                            <Grid   style={{margin: "1rem"}}>
+                    <Grid item xs={12} style={{width: '100%', height: '100%', maxWidth: '100%'}}>
+                        <Paper className={classes.paper} style={{width: '100%', height: '100%', maxWidth: '100%'}}>
+                            <Grid   style={{margin: "1rem", height: '100%', maxWidth: '100%'}}>
                                 <h3>Все ссылки</h3>
                                 <ReactDataGrid
+                                    style={{width: '100%', maxWidth: '100%', height: '100%'}}
                                     className={'rdg-light'}
                                     columns={columns}
                                     rows={data}

@@ -110,8 +110,8 @@ const MainPage = (()=>{
     return(
         <main className={classes.content}>
             <div className={classes.appBarSpacer} />
-            <Container maxWidth="lg" className={classes.container}>
-                <Grid container spacing={3}>
+            <Container maxWidth="lg" className={classes.container} style={{width: '100%', height: '100%', maxWidth: '100%'}}>
+                <Grid container spacing={3} style={{width: '100%', height: '100%', maxWidth: '100%'}}>
                     {/* Chart */}
                     <Grid item xs={12} md={8} lg={9}>
                         <Paper className={fixedHeightPaper}>
