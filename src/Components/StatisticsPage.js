@@ -116,20 +116,6 @@ const ColumnShortLinkFormatter = (props) =>{
 }
 
 
-
-const ColumnLinkFormatter = (props) =>{
-    return(
-        <a href={props.row.site} target="_blank" rel="noreferrer">{props.row.site}</a>
-    )
-}
-
-const ColumnShortLinkFormatter = (props) =>{
-    return(
-        <a href={'https://'+props.row.link}  target="_blank" rel="noreferrer">{props.row.link}</a>
-    )
-}
-
-
 const StatiscticsPage = (()=>{
     const [destination, setDestination] = useState('');
     const [slashtag, setSlashtag] = useState('');
