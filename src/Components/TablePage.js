@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import ReactDataGrid from 'react-data-grid';
 import axios from "axios";
+import { Row, RowRendererProps } from 'react-data-grid';
 
 const drawerWidth = 240;
 
@@ -109,6 +110,7 @@ function timeConverter(UNIX_timestamp){
     let time = date + ' ' + month + ' ' + hour + ':' + min  ;
     return time;
 }
+
 
 const TablePage = (()=>{
     const classes = useStyles();

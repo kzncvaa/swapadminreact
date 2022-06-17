@@ -173,8 +173,8 @@ export default function Dashboard() {
         <List>{mainListItems}</List>
       </Drawer>
         <Routes>
-          <Route path="/" element={<MainPage />}/>
-          <Route path="/table" element={<TablePage />}/>
+          {/*<Route path="/" element={<MainPage />}/>*/}
+          <Route path="/" element={<TablePage />}/>
           <Route path="/statistics" element={<StatisticsPage />}/>
         </Routes>
     </div>

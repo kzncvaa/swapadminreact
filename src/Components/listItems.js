@@ -10,15 +10,15 @@ import { Link } from "react-router-dom";
 
 export const mainListItems = (
   <div>
+      {/*<Link to="/" style={{color: "black", textDecoration: 'none'}} >*/}
+      {/*    <ListItem button>*/}
+      {/*        <ListItemIcon>*/}
+      {/*            <DashboardIcon />*/}
+      {/*        </ListItemIcon>*/}
+      {/*        <ListItemText primary="Главная" />*/}
+      {/*    </ListItem>*/}
+      {/*</Link>*/}
       <Link to="/" style={{color: "black", textDecoration: 'none'}} >
-          <ListItem button>
-              <ListItemIcon>
-                  <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary="Главная" />
-          </ListItem>
-      </Link>
-      <Link to="/table" style={{color: "black", textDecoration: 'none'}} >
           <ListItem button>
               <ListItemIcon>
                   <BackupTableIcon />
