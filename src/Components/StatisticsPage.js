@@ -2,7 +2,7 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import React, {useState, useEffect, useRef, useCallback} from "react";
+import React, {useState, useEffect} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Orders from "./Orders";
@@ -116,6 +116,20 @@ const ColumnShortLinkFormatter = (props) =>{
 }
 
 
+
+const ColumnLinkFormatter = (props) =>{
+    return(
+        <a href={props.row.site} target="_blank" rel="noreferrer">{props.row.site}</a>
+    )
+}
+
+const ColumnShortLinkFormatter = (props) =>{
+    return(
+        <a href={'https://'+props.row.link}  target="_blank" rel="noreferrer">{props.row.link}</a>
+    )
+}
+
+
 const StatiscticsPage = (()=>{
     const [destination, setDestination] = useState('');
     const [slashtag, setSlashtag] = useState('');
@@ -126,8 +140,7 @@ const StatiscticsPage = (()=>{
 
     const columns = [
         { key: "id", name: "ID", frozen: true},
-        { key: "site", name: "Сайт",  frozen: true, getRowMetaData: (row) => row, formatter: ColumnLinkFormatter
-        },
+        { key: "site", name: "Сайт",  frozen: true, getRowMetaData: (row) => row, formatter: ColumnLinkFormatter},
         { key: "link", name: "Короткая ссылка", editable: true, getRowMetaData: (row) => row, formatter: ColumnShortLinkFormatter },
         { key: "clicks", name: "Количество кликов", filterable: true}
     ];
@@ -248,7 +261,6 @@ const StatiscticsPage = (()=>{
         });
 
     }
-
 
     return(
         <main className={classes.content}>
