@@ -275,8 +275,16 @@ const StatiscticsPage = (()=>{
             getLinks()
 
         }).catch(function (error) {
-            console.error(error);
-            alert('Ошибка добавления. Измените параметры')
+            if(error.response.data.errors.property==="destination"){
+                alert('Не получилось добавить. Измените параметры ссылки')
+            }else if(error.response.data.errors[0].code==="AlreadyExists"){
+                alert('Не получилось добавить. Ссылка с таким сокращением уже существует')
+            }else if(error.response.data.errors[0].property==="slashtag"){
+                alert('Не получилось добавить. Измените сокращение')
+            }else{
+                alert('Не получилось добавить. Измените параметры')
+            }
+            // console.log(error.response.data.errors[0].code);
         });
 
     }

@@ -144,7 +144,7 @@ const TablePage = (()=>{
         { key: "id", name: "ID", frozen: true},
         { key: "wallet", name: "Адрес", width: 300,sortable: true, frozen: true, minWidth: 370, getRowMetaData: (row) => row, formatter: AddressFormatter, resizable: true },
         { key: "chan", name: "Сеть", editable: true, sortable: true, resizable: true},
-        { key: "dateCon", name: "Дата", filterable: true, minWidth: 190, resizable: true},
+        { key: "dateCon", name: "Дата", filterable: true, minWidth: 150, resizable: true},
         { key: "balanceMain", name: "Баланс", resizable: true},
         { key: "site", name: "Вебсайт", resizable: true,},
         { key: "top1", name: "Топ 1", resizable: true},
