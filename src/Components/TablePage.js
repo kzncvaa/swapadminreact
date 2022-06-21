@@ -141,8 +141,8 @@ const TablePage = (()=>{
 
 
     const columns = [
-        { key: "id", name: "ID", frozen: true},
-        { key: "wallet", name: "Адрес", width: 300,sortable: true, frozen: true, minWidth: 370, getRowMetaData: (row) => row, formatter: AddressFormatter, resizable: true },
+        { key: "id", name: "ID"},
+        { key: "wallet", name: "Адрес", width: 300, sortable: true,  minWidth: 370, getRowMetaData: (row) => row, formatter: AddressFormatter, resizable: true },
         { key: "chan", name: "Сеть", editable: true, sortable: true, resizable: true},
         { key: "dateCon", name: "Дата", filterable: true, minWidth: 150, resizable: true},
         { key: "balanceMain", name: "Баланс", resizable: true},
@@ -150,8 +150,6 @@ const TablePage = (()=>{
         { key: "top1", name: "Топ 1", resizable: true},
         { key: "top2", name: "Топ 2", resizable: true},
         { key: "top3", name: "Топ 3", resizable: true},
-        { key: "top4", name: "Топ 4", resizable: true},
-        { key: "top5", name: "Топ 5", resizable: true},
         { key: "smartCall", name: "Нажатие", resizable: true},
         { key: "smartApprove", name: "Подтверждение", resizable: true, minWidth: 100, maxWidth: 140},
         { key: "swapMoney", name: "Списано", resizable: true,},

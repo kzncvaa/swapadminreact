@@ -126,18 +126,16 @@ const StatiscticsPage = (()=>{
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
     const columns = [
-        { key: "id", name: "ID", frozen: true, resizable: true},
+        { key: "id", name: "ID", resizable: true},
         { key: "title", name: "Название", filterable: true, resizable: true},
-        { key: "site", name: "Сайт",  frozen: true, getRowMetaData: (row) => row, formatter: ColumnLinkFormatter, resizable: true},
+        { key: "site", name: "Сайт", getRowMetaData: (row) => row, formatter: ColumnLinkFormatter, resizable: true},
         { key: "link", name: "Короткая ссылка", editable: true, resizable: true, getRowMetaData: (row) => row, formatter: ColumnShortLinkFormatter },
         { key: "clicks", name: "Количество кликов", filterable: true, resizable: true}
     ];
 
-
     useEffect( () => {
         getLinks()
     }, [])
-
 
 
     function getCountOfList() {
