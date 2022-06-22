@@ -137,7 +137,8 @@ const TablePage = (()=>{
                 setData(req.data)
             }
         }
-       getAll()
+       getAll();
+        getAddress();
     }, [])
 
 
@@ -166,7 +167,6 @@ const TablePage = (()=>{
         let req = await axios.get('https://ruletka1234.herokuapp.com/getApproveAddress')
         setWallet(req.data)
     }
-    getAddress()
 
 
     return(
