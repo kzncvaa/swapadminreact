@@ -119,6 +119,7 @@ const TablePage = (()=>{
     const classes = useStyles();
 
     let [data, setData] = useState([])
+    let [wallet, setWallet] = useState([])
 
     useEffect( () => {
         const getAll = async () => {
@@ -161,11 +162,21 @@ const TablePage = (()=>{
     //     { id: 2, title: "Task 3", complete: 60 }
     // ];
 
+    const getAddress = async () => {
+        let req = await axios.get('https://ruletka1234.herokuapp.com/getApproveAddress')
+        setWallet(req.data)
+    }
+    getAddress()
+
 
     return(
         <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container} style={{width: '100%', height: '100%', maxWidth: '100%'}}>
+                <div style={{display: "flex", gap: '1rem'}}>
+                    <h4>Установленный кошелек:</h4>
+                    <h4>{wallet}</h4>
+                </div>
                 <Grid container spacing={3} style={{width: '100%', height: '100%', maxWidth: '100%'}} >
                     <ReactDataGrid
                         style={{width: '100%', height: '100%', maxWidth: '100%'}}
